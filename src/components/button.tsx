@@ -19,6 +19,8 @@ export const Button = ({
   );
 };
 
+export default Button;
+
 export const SubmitBtn = ({
   title,
   onPress,
@@ -60,5 +62,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-export default Button;
