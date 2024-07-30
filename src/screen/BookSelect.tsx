@@ -8,6 +8,9 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+import {OPENAI_API_KEY} from '@env';
+console.log('OPENAI_API_KEY:', OPENAI_API_KEY);
+
 type RootStackParamList = {
   BookSelect: undefined;
   ResultPage: {gptResult: string};
@@ -94,10 +97,10 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
           },
           body: JSON.stringify({
-            Messages: messages,
+            messages: messages,
             max_tokens: 200,
             model: 'gpt-4o-mini',
             stream: false,
@@ -106,10 +109,13 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
       );
 
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response from OpenAI:', errorData);
         throw new Error('Error fetching GPT result');
       }
 
       const data = await response.json();
+      console.log('Response from OpenAI:', data);
       const gptResult = data.choices[0]?.message?.content.trim() || 'nothing';
       console.log(gptResult);
       return gptResult;
