@@ -101,9 +101,10 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
           },
           body: JSON.stringify({
             messages: messages,
-            max_tokens: 200,
+            max_tokens: 500,
             model: 'gpt-4o-mini',
             stream: false,
+            temperature: 0,
           }),
         },
       );
