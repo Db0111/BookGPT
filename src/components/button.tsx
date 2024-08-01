@@ -30,7 +30,7 @@ export const SubmitBtn = ({
 }) => {
   return (
     <TouchableOpacity style={styles.submitbtn} onPress={onPress}>
-      <Text>{title}</Text>
+      <Text style={styles.textblackbg}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -51,14 +51,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
   },
   submitbtn: {
-    backgroundColor: 'lightblue',
-    height: 38,
+    backgroundColor: 'black',
+    height: 45,
     textAlign: 'center',
     borderWidth: 0,
-    borderRadius: 18,
+    borderRadius: 10,
     marginTop: 5,
     marginRight: 10,
     padding: 10,
     justifyContent: 'center',
   },
+  textblackbg: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16
+  }
 });
