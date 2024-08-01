@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {getPrompt} from '../utils/prompt';
@@ -83,7 +84,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
   const handleCompleteSelection = async () => {
     if (selectedCategory && selectedType && selectedLength) {
       const promptMessages = getPrompt(pressedButtons);
-      const gptResult: string = await fetchGPTResult(promptMessages); // Specify the return type as string
+      const gptResult = await fetchGPTResult(promptMessages); // Specify the return type as string
       navigation.navigate('ResultPage', {gptResult});
     } else {
       Alert.alert('책 유형과 분야를 선택해주세요!');
@@ -117,7 +118,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
 
       const data = await response.json();
       console.log('Response from OpenAI:', data);
-      const gptResult = data.choices[0]?.message?.content.trim() || 'nothing';
+      const gptResult = JSON.parse(data.choices[0]?.message?.content.trim()) || '{}';
       console.log(gptResult);
       return gptResult;
     } catch (error) {
@@ -127,8 +128,8 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
   };
   return (
     <View>
-      <Section title="책 선택">
-        <Text>읽고 싶은 책에 대한 정보를 알려주세요!</Text>
+      <Section title="AI가 내 입맛대로 추천해주는 책📚">
+        <Text style={{fontSize: 16}}>읽고 싶은 책에 대한 정보를 알려주세요!</Text>
       </Section>
       <Section title="도서유형">
         <Button
@@ -250,15 +251,9 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
           pressed={pressedButtons['300페이지 이상'] || false}
         />
       </Section>
-      <Section title="">
-        <SubmitBtn
-          title="선택 완료"
-          onPress={handleCompleteSelection}
-          // style={{
-          //   backgroundColor: isPressed ? 'blue' : 'gray',
-          // }}
-        />
-      </Section>
+      <View style={styles.buttoncontainer}>
+        <SubmitBtn title="AI의 선택은?" onPress={handleCompleteSelection} />
+      </View>
     </View>
   );
 }
@@ -271,21 +266,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '600',
   },
   sectionDescription: {
-    marginTop: 10,
+    marginTop: 15,
     fontSize: 16,
     fontWeight: '400',
   },
   highlight: {
     fontWeight: '700',
   },
-  submitBtn: {
-    marginTop: 20,
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 10,
+  buttoncontainer: {
+    marginTop: 15,
+    paddingHorizontal: 24,
   },
 });
