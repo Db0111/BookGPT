@@ -10,7 +10,6 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 import {OPENAI_API_KEY} from '@env';
-console.log('OPENAI_API_KEY:', OPENAI_API_KEY);
 
 type RootStackParamList = {
   BookSelect: undefined;
@@ -102,7 +101,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
           },
           body: JSON.stringify({
             messages: messages,
-            max_tokens: 500,
+            max_tokens: 700,
             model: 'gpt-4o-mini',
             stream: false,
             temperature: 0,
