@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import axios from 'axios';
+import Tag from '../components/tag';
 
 
 type GPTResult = {
@@ -17,7 +18,7 @@ type GPTResult = {
 
 type RootStackParamList = {
     BookSelect: undefined;
-    ResultPage: { gptResult: GPTResult };ㅣ
+    ResultPage: { gptResult: GPTResult };
     MyBook: { gptResult: GPTResult };
   };
 
@@ -70,7 +71,7 @@ const MyBook = ({route}: Props) => {
                             style={styles.bookImage}
                         />
                     )}
-                <Text>분야: {bookCategory}</Text>
+                <Tag title= {bookCategory}></Tag>
                 <Text>제목: {bookTitle}</Text>
                 <Text>저자: {bookAuthor}</Text>
                 
