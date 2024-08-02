@@ -2,7 +2,8 @@ export const createPrompt = (pressedButtons: {
   [key: string]: boolean;
 }): string => {
   const selectedKeys = Object.entries(pressedButtons)
-    .filter(([_key, value]) => value)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .filter(([key, value]) => value)
     .map(([key]) => key)
     .join(', ');
 
@@ -20,17 +21,17 @@ export const createPrompt = (pressedButtons: {
 
 const systemMessage = {
   role: 'system',
-  content: `Give recommendations based on the user's selected options. The options include: 
+  content: `Give one recommendation based on the user's selected options. The options include: 
   1. BookCategory ('소설', '시/에세이', '인문학', '과학', '역사', '경제', '종교', '예술', '기타')
-  2. BookLength ('lower than 100pages', '100~300 pages', 'more than 300pages')
+  2. BookLength ('lower than 100pages', '100~300 pages', 'more than 300pages', with exact number of pages)
   3. BookType ('국내도서', '외국도서')
   4. BookTitle
   5. BookAuthor
   6. BookDescription (Within 150~200words, but please finish with full sentences.)
   Don't give answer as markdown form, give it as JSON format, which keys are 6 items above.
   Please respond in Korean. But keys should be in English.
+  Also, if user wants to another recommendation with same previous options, you should give another recommendation, not same answer as previous one.
   `,
-
 };
 
 export const getPrompt = (pressedButtons: {[key: string]: boolean}) => {
