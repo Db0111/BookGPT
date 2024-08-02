@@ -41,15 +41,15 @@ const MyBook = ({route}: Props) => {
     useEffect(() => {
         const fetchBookImage = async () => {
             try {
-                const response = await axios.get(`https://dapi.kakao.com/v3/search/book`, {
+                const response = await axios.get('https://dapi.kakao.com/v3/search/book', {
                     headers: {
                         Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
                     },
                     params: {
                         query: gptResult.BookTitle,
-                        size: 1,
+                        size: 2,
                     },
-            })
+            });
             if (response.data.documents && response.data.documents.length > 0) {
                 setBookImageUrl(response.data.documents[0].thumbnail);
             }
@@ -63,7 +63,6 @@ const MyBook = ({route}: Props) => {
 
     return (
         <View>
-            <Text>My Book</Text>
             <View style={styles.container}>
                 {bookImageUrl && (
                         <Image
@@ -71,14 +70,14 @@ const MyBook = ({route}: Props) => {
                             style={styles.bookImage}
                         />
                     )}
-                <Tag title= {bookCategory}></Tag>
-                <Text>제목: {bookTitle}</Text>
-                <Text>저자: {bookAuthor}</Text>
-                
+                <Tag title={bookCategory} />
+                <Text style={styles.bookTitle}>{bookTitle}</Text>
+                <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+
             </View>
         </View>
     );
-  }; 
+  };
 
 
 export default MyBook;
@@ -92,8 +91,18 @@ const styles = StyleSheet.create({
     bookImage: {
         width: 100,
         height: 150,
-        marginTop: 20,
+        marginTop: 10,
     },
+    bookTitle: {
+        fontSize: 17,
+        fontWeight: '500',
+    },
+    bookAuthor: {
+        fontSize: 14,
+        fontWeight:'400',
+    }
+
+
 
 
 });
