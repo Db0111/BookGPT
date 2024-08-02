@@ -14,7 +14,8 @@ import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import BookSelect from './src/screen/BookSelect';
-import ResultPage from './src/screen/Resultpage';
+import ResultPage from './src/screen/ResultPage';
+import MyBook from './src/screen/MyBook';
 
 // type SectionProps = PropsWithChildren<{
 //   title: string;
@@ -23,6 +24,7 @@ import ResultPage from './src/screen/Resultpage';
 type RootStackParamList = {
   BookSelect: undefined;
   ResultPage: {gptResult: string};
+  MyBook: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -73,12 +75,17 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="BookSelect"
             component={BookSelect}
-            options={{title: 'Book Selection'}}
+            options={{title: '책 선택'}}
           />
           <Stack.Screen
             name="ResultPage"
             component={ResultPage}
             options={{title: 'Result'}}
+          />
+           <Stack.Screen
+            name="MyBook"
+            component={MyBook}
+            options={{title: '내 서재'}}
           />
         </Stack.Navigator>
       </SafeAreaView>
