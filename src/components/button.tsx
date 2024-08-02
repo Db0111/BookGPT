@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
@@ -38,7 +39,7 @@ export const SubmitBtn = ({
 const styles = StyleSheet.create({
   button: {
     borderColor: 'grey',
-    height: 38,
+    height:40,
     textAlign: 'center',
     borderWidth: 1,
     borderRadius: 18,
