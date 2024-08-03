@@ -151,7 +151,7 @@ export function ResultPage({ navigation, route }: Props): React.JSX.Element{
     <ScrollView>
       <View style={styles.container}>
         {isLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size='large' color="#0000ff" style={styles.loading}/>
         ) : (<View>
           <Text style={styles.title}>AI 책 추천 결과</Text>
           <View style={styles.rightContainer}>
@@ -213,11 +213,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     // alignItems: 'center',
     padding: 16,
+  },
+  loading: {
+    width: '100%',
+    justifyContent: 'center',
+
   },
   rightContainer: {
     width: '50%',    
