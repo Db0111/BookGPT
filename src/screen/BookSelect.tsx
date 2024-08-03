@@ -1,19 +1,18 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import {getPrompt} from '../utils/prompt';
 
-import {Alert, StyleSheet, Text, useColorScheme, View} from 'react-native';
+import {Alert, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
 import {Button, SubmitBtn} from '../components/button';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {OPENAI_API_KEY} from '@env';
 
 type RootStackParamList = {
   BookSelect: undefined;
-  ResultPage: {gptResult: string};
+  ResultPage: {selectedOptions: {[key: string]: boolean}};
+  MyBook: undefined;
 };
 
 type BookSelectScreenNavigationProp = StackNavigationProp<
@@ -59,7 +58,21 @@ type Props = {
 
 export function BookSelect({navigation}: Props): React.JSX.Element {
   //누른 옵션 하이라이트
-  const [pressedButtons, setPressedButtons] = React.useState<{
+  React.useLayoutEffect(() => {
+    const navigateToMyBook = () => {
+      navigation.navigate('MyBook');
+    };
+
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={navigateToMyBook} style={styles.btn_mybook}>
+          <Text>내 서재</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  const [selectedOptions, setSelectedOptions] = React.useState<{
     [key: string]: boolean;
   }>({});
   //책 유형(국내, 외국)
@@ -74,7 +87,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
 
   const handlePress = (buttonKey: string) => {
     //handlePress 호출하면 isPressed가 true면 false로, false면 true로 바뀜
-    setPressedButtons(prevState => ({
+    setSelectedOptions(prevState => ({
       ...prevState,
       [buttonKey]: !prevState[buttonKey],
     }));
@@ -82,49 +95,12 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
 
   const handleCompleteSelection = async () => {
     if (selectedCategory && selectedType && selectedLength) {
-      const promptMessages = getPrompt(pressedButtons);
-      const gptResult = await fetchGPTResult(promptMessages); // Specify the return type as string
-      navigation.navigate('ResultPage', {gptResult});
+      navigation.navigate('ResultPage', {selectedOptions});
     } else {
       Alert.alert('책 유형과 분야를 선택해주세요!');
     }
   };
-  const fetchGPTResult = async (messages: any): Promise<string> => {
-    try {
-      const response = await fetch(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
-          body: JSON.stringify({
-            messages: messages,
-            max_tokens: 700,
-            model: 'gpt-4o-mini',
-            stream: false,
-            temperature: 0,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error response from OpenAI:', errorData);
-        throw new Error('Error fetching GPT result');
-      }
-
-      const data = await response.json();
-      console.log('Response from OpenAI:', data);
-      const gptResult = JSON.parse(data.choices[0]?.message?.content.trim()) || '{}';
-      console.log(gptResult);
-      return gptResult;
-    } catch (error) {
-      console.error('Error fetching GPT result:', error);
-      return 'error';
-    }
-  };
+  
   return (
     <View>
       <Section title="AI가 내 입맛대로 추천해주는 책📚">
@@ -137,7 +113,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedType('국내도서');
             handlePress('국내도서');
           }}
-          pressed={pressedButtons['국내도서'] || false}
+          pressed={selectedOptions['국내도서'] || false}
         />
         <Button
           title="외국도서"
@@ -145,7 +121,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedType('외국도서');
             handlePress('외국도서');
           }}
-          pressed={pressedButtons['외국도서'] || false}
+          pressed={selectedOptions['외국도서'] || false}
         />
       </Section>
 
@@ -156,7 +132,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('소설');
             handlePress('소설');
           }}
-          pressed={pressedButtons['소설'] || false}
+          pressed={selectedOptions['소설'] || false}
         />
         <Button
           title="시/에세이"
@@ -164,7 +140,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('시/에세이');
             handlePress('시/에세이');
           }}
-          pressed={pressedButtons['시/에세이'] || false}
+          pressed={selectedOptions['시/에세이'] || false}
         />
         <Button
           title="인문학"
@@ -172,7 +148,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('인문학');
             handlePress('인문학');
           }}
-          pressed={pressedButtons['인문학'] || false}
+          pressed={selectedOptions['인문학'] || false}
         />
         <Button
           title="과학"
@@ -180,7 +156,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('과학');
             handlePress('과학');
           }}
-          pressed={pressedButtons['과학'] || false}
+          pressed={selectedOptions['과학'] || false}
         />
         <Button
           title="역사"
@@ -188,7 +164,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('역사');
             handlePress('역사');
           }}
-          pressed={pressedButtons['역사'] || false}
+          pressed={selectedOptions['역사'] || false}
         />
         <Button
           title="경제"
@@ -196,7 +172,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('경제');
             handlePress('경제');
           }}
-          pressed={pressedButtons['경제'] || false}
+          pressed={selectedOptions['경제'] || false}
         />
         <Button
           title="종교"
@@ -204,7 +180,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('종교');
             handlePress('종교');
           }}
-          pressed={pressedButtons['종교'] || false}
+          pressed={selectedOptions['종교'] || false}
         />
         <Button
           title="예술"
@@ -212,7 +188,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('예술');
             handlePress('예술');
           }}
-          pressed={pressedButtons['예술'] || false}
+          pressed={selectedOptions['예술'] || false}
         />
         <Button
           title="기타"
@@ -220,7 +196,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedCategory('기타');
             handlePress('기타');
           }}
-          pressed={pressedButtons['기타'] || false}
+          pressed={selectedOptions['기타'] || false}
         />
       </Section>
       {/* Todo: bugfix 분량 부분 버튼 상태 미변경 버그 수정 필요 */}
@@ -231,7 +207,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedLength('100페이지 이하');
             handlePress('100페이지 이하');
           }}
-          pressed={pressedButtons['100페이지 이하'] || false}
+          pressed={selectedOptions['100페이지 이하'] || false}
         />
         <Button
           title="100~300페이지"
@@ -239,7 +215,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedLength('100~300페이지');
             handlePress('100~300페이지');
           }}
-          pressed={pressedButtons['100~300페이지'] || false}
+          pressed={selectedOptions['100~300페이지'] || false}
         />
         <Button
           title="300페이지 이상"
@@ -247,7 +223,7 @@ export function BookSelect({navigation}: Props): React.JSX.Element {
             setSelectedLength('300페이지 이상');
             handlePress('300페이지 이상');
           }}
-          pressed={pressedButtons['300페이지 이상'] || false}
+          pressed={selectedOptions['300페이지 이상'] || false}
         />
       </Section>
       <View style={styles.buttoncontainer}>
@@ -279,5 +255,9 @@ const styles = StyleSheet.create({
   buttoncontainer: {
     marginTop: 15,
     paddingHorizontal: 24,
+  },
+  btn_mybook: {
+    marginRight: 15,
+    height: 30,
   },
 });
