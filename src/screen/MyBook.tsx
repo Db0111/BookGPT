@@ -24,8 +24,8 @@ const MyBook = () => {
             setBookData(JSON.parse(storedData));
         } else {
             setBookData(null);
-        };
-    }
+        }
+    };
 
     fetchBookData();
   }, []);
@@ -33,8 +33,9 @@ const MyBook = () => {
     return (
         <View>
             <View style={styles.container}>
-            
-                <Image source={{ uri: bookData?.BookImage }}/>
+                {/* todo 이미지 불러오지 못하는것 -> style이 없어서 였다.. */}
+
+                <Image source={{ uri: bookData?.BookImage }} style={styles.bookImage}/>
                 <Tag title={bookData?.BookCategory} />
                 <Text style={styles.bookTitle}>{bookData?.BookTitle}</Text>
                 <Text style={styles.bookAuthor}>{bookData?.BookAuthor}</Text>
@@ -60,7 +61,12 @@ const styles = StyleSheet.create({
     bookAuthor: {
         fontSize: 14,
         fontWeight:'400',
-    }
+    },
+    bookImage: {
+        width: 130,
+        height: 180,
+        // marginTop: 10,
+      },
 
 
 
