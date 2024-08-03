@@ -1,78 +1,43 @@
 /* eslint-disable prettier/prettier */
 //Todo 추천 도서 맘에 들어요 누를 경우 , 저장하기
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import axios from 'axios';
+import { View, Text, StyleSheet, Image} from 'react-native';
 import Tag from '../components/tag';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GPTResult } from './ResultPage';
 
 
-type GPTResult = {
-    BookCategory: string;
-    BookType: string;
-    BookTitle: string;
-    BookAuthor: string;
-    BookDescription: string;
-    BookLength: string;
-  };
-
-type RootStackParamList = {
-    BookSelect: undefined;
-    ResultPage: { gptResult: GPTResult };
-    MyBook: { gptResult: GPTResult };
-  };
+type BookResult = {
+    BookImage: string;
+  }
 
 
-type MyBookRouteProp = RouteProp<RootStackParamList, 'MyBook'>;
 
-type Props = {
-  route: MyBookRouteProp;
-};
-const MyBook = ({route}: Props) => {
-    const { gptResult } = route.params;
+const MyBook = () => {
 
-    const [bookImageUrl, setBookImageUrl] = useState<string | null>(null);
-
-
-    const bookTitle = gptResult.BookTitle;
-    const bookAuthor = gptResult.BookAuthor;
-    const bookCategory = gptResult.BookCategory;
+    const [bookData, setBookData] = useState<BookResult & GPTResult | null>(null);
 
     useEffect(() => {
-        const fetchBookImage = async () => {
-            try {
-                const response = await axios.get('https://dapi.kakao.com/v3/search/book', {
-                    headers: {
-                        Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
-                    },
-                    params: {
-                        query: gptResult.BookTitle,
-                        size: 2,
-                    },
-            });
-            if (response.data.documents && response.data.documents.length > 0) {
-                setBookImageUrl(response.data.documents[0].thumbnail);
-            }
-        } catch (error) {
-            console.error('Error fetching book image:', error);
-        }
-    };
+        const fetchBookData = async () => {
+        const storedData = await AsyncStorage.getItem('bookData');
+        if (storedData !== null) {
+            setBookData(JSON.parse(storedData));
+        } else {
+            setBookData(null);
+        };
+    }
 
-    fetchBookImage();
-}, [gptResult.BookTitle]);
+    fetchBookData();
+  }, []);
 
     return (
         <View>
             <View style={styles.container}>
-                {bookImageUrl && (
-                        <Image
-                            source={{ uri: bookImageUrl }}
-                            style={styles.bookImage}
-                        />
-                    )}
-                <Tag title={bookCategory} />
-                <Text style={styles.bookTitle}>{bookTitle}</Text>
-                <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+            
+                <Image source={{ uri: bookData?.BookImage }}/>
+                <Tag title={bookData?.BookCategory} />
+                <Text style={styles.bookTitle}>{bookData?.BookTitle}</Text>
+                <Text style={styles.bookAuthor}>{bookData?.BookAuthor}</Text>
 
             </View>
         </View>
@@ -88,11 +53,6 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       padding: 16,
     },
-    bookImage: {
-        width: 100,
-        height: 150,
-        marginTop: 10,
-    },
     bookTitle: {
         fontSize: 17,
         fontWeight: '500',
@@ -101,6 +61,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight:'400',
     }
+
 
 
 
