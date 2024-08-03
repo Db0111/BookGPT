@@ -133,6 +133,7 @@ export function ResultPage({ navigation, route }: Props): React.JSX.Element{
   const navigateToMyBook = () => {
     navigation.navigate('MyBook');
   };
+  //todo 왜 데이터가 추가되지 않고 계속 덮어씌워지는지 확인
   const saveMyBook = async () => {
     try {
       const bookData = {
@@ -153,11 +154,22 @@ export function ResultPage({ navigation, route }: Props): React.JSX.Element{
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (<View>
           <Text style={styles.title}>AI 책 추천 결과</Text>
-          <Text style={styles.subtitle}>Book Category</Text>
-          <Text style={styles.result}>{gptResult.BookCategory}</Text>
+          <View style={styles.rightContainer}>
+            {bookImageUrl && (
+             <Image source={{ uri: bookImageUrl }} style={styles.bookImage}/>
+              )
+            }
+            
+          </View>
 
-          <Text style={styles.subtitle}>Book Length</Text>
-          <Text style={styles.result}>{gptResult.BookLength}</Text>
+          <View style={styles.leftContainer}>
+            <Text style={styles.subtitle}>Book Category</Text>
+            <Text style={styles.result}>{gptResult.BookCategory}</Text>
+
+            <Text style={styles.subtitle}>Book Length</Text>
+            <Text style={styles.result}>{gptResult.BookLength}</Text>
+
+          </View>
 
           <Text style={styles.subtitle}>Book Type</Text>
           <Text style={styles.result}>{gptResult.BookType}</Text>
@@ -170,14 +182,7 @@ export function ResultPage({ navigation, route }: Props): React.JSX.Element{
 
           <Text style={styles.subtitle}>Book Description</Text>
           <Text style={styles.result}>{gptResult.BookDescription}</Text>
-          <View>
-          {bookImageUrl && (
-                        <Image
-                            source={{ uri: bookImageUrl }}
-                            style={styles.bookImage}
-                        />
-                    )}
-          </View>
+
           <View style={styles.btnContainer}>
               <TouchableOpacity style={styles.button}>
                 <Text
@@ -207,9 +212,23 @@ export default ResultPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
     // justifyContent: 'center',
     // alignItems: 'center',
     padding: 16,
+  },
+  rightContainer: {
+    width: '50%',    
+    alignItems: 'flex-end',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 50,
+  },
+  leftContainer: {
+    width: '60%',    
   },
 
   btnContainer: {
@@ -247,9 +266,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bookImage: {
-    width: 100,
-    height: 150,
-    marginTop: 10,
+    width: 130,
+    height: 180,
+    // marginTop: 10,
   },
 
 });
