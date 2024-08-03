@@ -102,33 +102,29 @@ export function ResultPage({ navigation, route }: Props): React.JSX.Element{
   const [bookImageUrl, setBookImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (gptResult) {
-
-        const fetchBookImage = async () => {
-            try {
-                const response = await axios.get('https://dapi.kakao.com/v3/search/book', {
-                    headers: {
-                        Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
-                    },
-                    params: {
-                        query: gptResult.BookTitle,
-                        size: 2,
-                    },
-                });
-                if (response.data.documents && response.data.documents.length > 0) {
-                    setBookImageUrl(response.data.documents[0].thumbnail);
-                }
-            } catch (error) {
-                console.error('Error fetching book image:', error);
-                
-            }
+    const fetchBookImage = async () => {
+      try {
+        if (gptResult && gptResult.BookTitle) {
+          const response = await axios.get('https://dapi.kakao.com/v3/search/book', {
+            headers: {
+              Authorization: `KakaoAK ${process.env.KAKAO_REST_API_KEY}`,
+            },
+            params: {
+              query: gptResult.BookTitle,
+              size: 2,
+            },
+          });
+          if (response.data.documents && response.data.documents.length > 0) {
+            setBookImageUrl(response.data.documents[0].thumbnail);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching book image:', error);
+      }
     };
 
     fetchBookImage();
-  }
-}, );
-
-
+  }, [gptResult]);
 
   const navigateToBookSelect = () => {
     navigation.navigate('BookSelect');
@@ -255,5 +251,5 @@ const styles = StyleSheet.create({
     height: 150,
     marginTop: 10,
   },
-  
+
 });
