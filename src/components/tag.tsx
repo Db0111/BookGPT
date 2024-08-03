@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-export const Tag = ({title}: {title: string}) => {
+export const Tag = ({title}: {title: string | undefined}) => {
   return (
     <TouchableOpacity style={styles.tag}>
       <Text>{title}</Text>
