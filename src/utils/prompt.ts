@@ -1,7 +1,7 @@
-export const createPrompt = (pressedButtons: {
+export const createPrompt = (selectedOptions: {
   [key: string]: boolean;
 }): string => {
-  const selectedKeys = Object.entries(pressedButtons)
+  const selectedKeys = Object.entries(selectedOptions)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .filter(([key, value]) => value)
     .map(([key]) => key)
