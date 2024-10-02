@@ -6,7 +6,7 @@ export const createPrompt = (selectedOptions: {
     .filter(([key, value]) => value)
     .map(([key]) => key)
     .join(', ');
-
+  //todo 같은 옵션 전달 시 응답 계속 동일한 것 수정 필요
   return `User has selected the following options: ${selectedKeys}. He/She wants to get recommendation from you based on these options. 
       You should provide books which exist in the real world. You must not make fake books.
       Give me information about following (based on options): 
